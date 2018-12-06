@@ -20,6 +20,15 @@ List* list_init(void* (*dealloc)(void* data))
 void list_append(List* list, void* data)
 {
 	Node* trav;
+
+	if( list->next == NULL )
+	{
+		list->next = (Node*) malloc(sizeof(Node));
+		list->next->data = data;
+		list->next->next = NULL;
+		list->size += 1;
+		return;
+	}
 	
 	trav = list->next;
 
