@@ -4,12 +4,16 @@ CFLAGS = -g
 SRC = ../src
 SRCS = ../src/$(wildcard *.o)
 
-$(warning $(SRCS))
-
 TESTS = $(wildcard *.c)
-OBJS = $(patsubst %.c, %.o, $(TESTS))
 PROGS = $(patsubst %.c, %, $(TESTS))
 
-all: $(PROGS)
+all: test_list
 
-$(PROGS): $(OBJS) 
+test_list: test_list.c
+	$(CC) $(CFLAGS) -c test_list.c -I$(SRC)
+	$(CC) $(CFLAGS) -o test_list test_list.o $(SRC)/list.o
+
+
+.PHONY:
+clean:
+	rm -f *.o $(PROGS)

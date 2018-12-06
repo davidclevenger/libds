@@ -2,12 +2,13 @@
 #include <stdlib.h>
 #include "list.h"
 
-List* list_init(void* (*dealloc)(void* data))
+List* list_init(void (*dealloc)(void* data))
 {
 	List* list = (List*) malloc(sizeof(List));
 	if( list == NULL )
 	{
 		fprintf(stderr, "malloc failure\n");
+		exit(1);
 	}
 
 	list->next = NULL;
@@ -19,9 +20,10 @@ List* list_init(void* (*dealloc)(void* data))
 
 void list_append(List* list, void* data)
 {
-	Node* trav;
+	Node* trav = list->next;
 
-	if( list->next == NULL )
+	/* list empty */
+	if( trav == NULL )
 	{
 		list->next = (Node*) malloc(sizeof(Node));
 		list->next->data = data;
@@ -29,36 +31,39 @@ void list_append(List* list, void* data)
 		list->size += 1;
 		return;
 	}
-	
-	trav = list->next;
-
-	while( trav != NULL )
+	else /* list not empty */
 	{
-		trav = trav->next;
-	}
+		/* traverse to end of list */
+		while( trav->next != NULL )
+		{
+			trav = trav->next;
+		}
 
-	trav = (Node*) malloc(sizeof(Node));
-	if( trav == NULL )
-	{
-		fprintf(stderr, "malloc failure\n");
-	}
+		trav->next = (Node*) malloc(sizeof(Node));
+		if( trav->next == NULL )
+		{
+			fprintf(stderr, "malloc failure\n");
+			exit(1);
+		}
 	
-	list->size += 1;
-	trav->next = NULL;
-	trav->data = data;
+		trav->next->data = data;
+		trav->next->next = NULL;
+		list->size += 1;
+	}
 }
 
 void* list_get(List* list, int idx)
 {
 	Node* trav;
+	int curr;
 
-	if( idx >= list->size )
+	if( idx >= list->size || idx < 0 )
 	{
 		fprintf(stderr, "List: index out of bounds\n");
 		return NULL;
 	}
 
-	int curr = 0;
+	curr = 0;
 	trav = list->next;
 
 	while( curr < idx )
@@ -75,7 +80,7 @@ void list_remove(List* list, int idx)
 	Node* prev = NULL;
 	int curr = 0;
 
-	if( idx >= list->size )
+	if( idx >= list->size || idx < 0 )
 	{
 		fprintf(stderr, "List: index out of bounds\n");
 		return;

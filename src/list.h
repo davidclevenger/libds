@@ -12,12 +12,12 @@ typedef struct node
 typedef struct
 {
 	Node* next;
-	void* (*dealloc)(void* data);
+	void (*dealloc)(void* data);
 	int size;
 	char pad[4];
 } List;
 
-List* list_init(void* (*dealloc)(void*));
+List* list_init(void (*dealloc)(void*));
 void list_append(List*, void*);
 void* list_get(List*, int); 
 void list_remove(List*, int);

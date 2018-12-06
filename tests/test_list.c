@@ -1,13 +1,16 @@
+#include <stdlib.h>
 #include <assert.h>
 #include "list.h"
 
 typedef struct
 {
 	int x;
-} testStruct
+} testStruct;
 
-void* structDestroy(testStruct* ts)
+void structDestroy(void* in)
 {
+	testStruct* ts;
+	ts = (testStruct*) in;
 	free(ts);
 }
 
@@ -55,7 +58,7 @@ int main()
 	assert( grab->x == 25 );
 
 	grab = (testStruct*) list_get(list, 3);
-	assert( grab->x = 55 );
+	assert( grab->x == 55 );
 
 	grab = (testStruct*) list_get(list, 4);
 	assert( grab == NULL );
@@ -87,4 +90,6 @@ int main()
 	* then list_free() took care of
 	* deallocating.
 	*/
+
+	return 0;
 }
