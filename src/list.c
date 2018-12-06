@@ -69,6 +69,7 @@ void* list_get(List* list, int idx)
 	while( curr < idx )
 	{
 		trav = trav->next;
+		++curr;
 	}
 
 	return trav->data;
