@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "list.h"
 
-List* list_make(void (*dealloc)(void* dealloc))
+List* list_init(void* (*dealloc)(void* data))
 {
 	List* list = (List*) malloc(sizeof(List));
 	if( list == NULL )
@@ -60,23 +60,61 @@ void* list_get(List* list, int idx)
 	return trav->data;
 }
 
-void list_remove(List* list, void* data)
+void list_remove(List* list, int idx)
 {
-	Node* trav;
-	Node* prev;
+	Node* trav = NULL;
+	Node* prev = NULL;
+	int curr = 0;
+
+	if( idx >= list->size )
+	{
+		fprintf(stderr, "List: index out of bounds\n");
+		return;
+	}
 	
 	trav = list->next;
 
-	while( trav != NULL )
+	while( curr < idx )
 	{
-		if( trav->data == data )
-		{
-
-		}
+		prev = trav;
+		trav = trav->next;
+		++curr;
 	}
+
+	if( prev == NULL ) /* first node */
+	{
+		list->next = trav->next;
+	}
+	else /* node 2 - size */
+	{
+		prev->next = trav->next;
+	}
+
+	if( list->dealloc != NULL )
+	{
+		list->dealloc(trav->data);
+	}
+
+	free(trav);
 }
 
 void list_free(List* list)
 {
+	Node* trav;
+	
+	while( list->next != NULL )
+	{
+		/* pop front and relink */
+		trav = list->next;
+		list->next = trav->next;
+		
+		if( list->dealloc != NULL )
+		{
+			list->dealloc(trav->data);
+		}
 
+		free(trav);
+	}
+	
+	free(list);
 }
