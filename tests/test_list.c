@@ -81,10 +81,6 @@ int main()
 
 	list_free(list);
 
-	free(a);
-	free(c);
-	free(d);
-
 	/* 
 	* if there are no memory leaks,
 	* then list_free() took care of
