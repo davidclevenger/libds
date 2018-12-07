@@ -1,5 +1,12 @@
 CC = gcc
-CFLAGS = -ansi -Wall -Wpedantic -O2
+CFLAGS = -ansi -Wall -Wpedantic
+DEBUG = off
+
+ifneq ($(DEBUG), off)
+	CFLAGS += -g
+else
+	CFLAGS += -O2
+endif
 
 SRCS = $(wildcard *.c)
 OBJS = $(patsubst %.c, %.o, $(SRCS))

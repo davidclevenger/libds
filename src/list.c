@@ -111,6 +111,8 @@ void list_remove(List* list, int idx)
 	}
 
 	free(trav);
+
+	list->size--;
 }
 
 void list_free(List* list)
